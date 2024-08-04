@@ -9,7 +9,7 @@ const NodeWrapper = ({ id, title, children, inputs = [], outputs = [] }) => {
     };
 
     return (
-        <div className="w-52 min-h-[80px] border border-black p-2.5">
+        <div className="w-52 min-h-[80px] border border-customPurple p-2.5">
             {inputs.map((input, index) => (
                 <Handle key={`input-${index}`}
                     type="target"
