@@ -23,6 +23,7 @@ export const OutputNode = ({ id, data }) => {
           Name:
           <input
             type="text"
+            className="p-2.5 w-full"
             value={currName}
             onChange={handleNameChange}
           />

@@ -1,5 +1,16 @@
 // submit.js
+import { Button } from "./components/Button";
 import { useStore } from "./store";
+import { useState } from "react";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "./components/Alert";
 
 export const SubmitButton = () => {
 
@@ -8,8 +19,12 @@ export const SubmitButton = () => {
         edges: state.edges
     }));
 
+
+    const [isAlertOpen, setIsAlertOpen] = useState(false);
+    const [alertContent, setAlertContent] = useState({});
+
     const handleSubmit = async () => {
-        console.log({ nodes, edges }) //check if nodes and edges are being sent or not
+        console.log({ nodes, edges })
         try {
             const response = await fetch('http://127.0.0.1:8000/pipelines/parse', {
                 method: 'POST',
@@ -21,19 +36,46 @@ export const SubmitButton = () => {
 
             const data = await response.json();
             console.log(data);
-            alert(`Nodes: ${data.num_nodes}, Edges:${data.num_edges}, DAG:${data.is_dag}`)
-
-            if (!response.ok) {
-                console.error('Failed to submit pipeline data');
+            if (response.ok) {
+                setAlertContent({
+                    title: "Pipeline Submitted Successfully",
+                    description: `Nodes: ${data.num_nodes}, Edges: ${data.num_edges}, DAG: ${data.is_dag ? 'Yes' : 'No'}`
+                });
+            } else {
+                setAlertContent({
+                    title: "Error",
+                    description: "Failed to submit pipeline data"
+                });
             }
+            setIsAlertOpen(true);
         } catch (error) {
             console.error('Error:', error);
+            setAlertContent({
+                title: "Error",
+                description: "An unexpected error occurred"
+            });
+            setIsAlertOpen(true);
         }
     };
 
     return (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <button type="submit" onClick={handleSubmit}>Submit</button>
+        <div className="flex items-center justify-center">
+            <Button type="submit" onClick={handleSubmit}>submit</Button>
+            <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>{alertContent.title}</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            {alertContent.description}
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogAction onClick={() => setIsAlertOpen(false)}>
+                            OK
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }

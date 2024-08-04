@@ -2,7 +2,7 @@ import { Handle, Position } from "reactflow";
 
 const NodeWrapper = ({ id, title, children, inputs = [], outputs = [] }) => {
     return (
-        <div style={{ width: 200, minHeight: 80, border: '1px solid black', padding: '10px' }}>
+        <div className="w-52 min-h-[80px] border border-black p-2.5">
             {inputs.map((input, index) => (
                 <Handle key={`input-${index}`}
                     type="target"

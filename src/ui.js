@@ -100,7 +100,7 @@ export const PipelineUI = () => {
 
   return (
     <>
-      <div ref={reactFlowWrapper} style={{ width: '100wv', height: '70vh' }}>
+      <div ref={reactFlowWrapper} className="w-full h-[70vh]">
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -119,7 +119,7 @@ export const PipelineUI = () => {
           <Controls />
           <MiniMap />
         </ReactFlow>
-      </div>
+      </div >
     </>
   )
 }
