@@ -40,13 +40,12 @@ export const useStore = create((set, get) => ({
     const sourceHandle = connection.sourceHandle;
     let label = '';
 
-    if (sourceNode && sourceNode.data) {
-      if (sourceNode.type === 'input' && sourceNode.data.inputName) {
-        label = sourceNode.data.inputName;
-      }
 
-      else if (sourceNode.type === 'text' && sourceHandle) {
-        label = sourceHandle.replace(`${sourceNode.id}-`, '');
+    if (sourceNode && sourceNode.data) {
+      if (sourceNode.type === 'text' || sourceNode.type === 'test') {
+        label = sourceNode.data.text || sourceNode.data.test || '';
+      } else if (sourceNode.type === 'input' && sourceNode.data.inputName) {
+        label = sourceNode.data.inputName;
       }
     }
 
@@ -68,12 +67,14 @@ export const useStore = create((set, get) => ({
     const updatedEdges = get().edges.map((edge) => {
       if (edge.source === nodeId) {
         const sourceNode = updatedNodes.find(node => node.id === nodeId);
-        if (sourceNode && sourceNode.type === 'text') {
-          return { ...edge, label: sourceNode.data.text || '' };
+        if (sourceNode) {
+          const label = sourceNode.data.text || sourceNode.data.test || '';
+          return { ...edge, label };
         }
       }
       return edge;
     });
+
 
     set({ nodes: updatedNodes, edges: updatedEdges });
   },

@@ -1,26 +1,29 @@
 import { useState } from "react";
 import NodeWrapper from "../components/NodeWrapper"
+import { useStore } from "../store";
 
 
 export const TestNode = ({ id, data }) => {
     const [currText, setCurrText] = useState(data?.text || '{{input}}');
+    const updateNodeField = useStore(state => state.updateNodeField);
 
     const handleTextChange = (e) => {
-        setCurrText(e.target.value);
+        const newValue = e.target.value;
+        setCurrText(newValue);
+        updateNodeField(id, 'test', newValue);
     };
 
     return (
-        <NodeWrapper id={id} title="Text" outputs={['output']}>
+        <NodeWrapper id={id} outputs={[`${currText}`]}>
             <div>
                 <label>
-                    Text:
+                    Test:
                     <input
                         type="text"
                         value={currText}
                         onChange={handleTextChange}
                     />
                 </label>
-                <p>{currText}</p>
             </div>
         </NodeWrapper>
     )

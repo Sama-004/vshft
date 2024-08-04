@@ -1,21 +1,18 @@
 // textNode.js
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import NodeWrapper from '../components/NodeWrapper';
 import { useStore } from '../store';
 
 export const TextNode = ({ id, data }) => {
   const [currText, setCurrText] = useState(data?.text || '{{input}}');
+  const updateNodeField = useStore(state => state.updateNodeField);
 
   const handleTextChange = (e) => {
-    setCurrText(e.target.value);
-    useStore.getState().updateNodeField(id, 'text', e.target.value);
+    const newValue = e.target.value;
+    setCurrText(newValue);
+    updateNodeField(id, 'text', newValue);
   };
-
-  useEffect(() => {
-    console.log('Current Text:', currText);
-  }, [currText]);
-
 
   return (
     <NodeWrapper id={id} outputs={[`${currText}`]}>
