@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NodeWrapper from '../components/NodeWrapper';
+import { useStore } from '../store';
 
 export const LLMStatusNode = ({ id, data }) => {
     const [status, setStatus] = useState(data?.status || 'Idle');
+    const updateNodeField = useStore(state => state.updateNodeField);
 
-    const updateStatus = (newStatus) => {
-        setStatus(newStatus);
-    };
+
+    useEffect(() => {
+        updateNodeField(id, 'status', status);
+    }, [id, status, updateNodeField]);
+
 
     const statusColors = {
         'Idle': '#4CAF50',      // Green
@@ -15,8 +19,13 @@ export const LLMStatusNode = ({ id, data }) => {
         'Completed': '#2196F3'  // Blue
     };
 
+    const updateStatus = (newStatus) => {
+        setStatus(newStatus);
+        updateNodeField(id, 'status', newStatus)
+    };
+
     return (
-        <NodeWrapper id={id} title="LLM Status" inputs={['statusUpdate']} outputs={['currentStatus']}>
+        <NodeWrapper id={id} title="LLM Status" inputs={['statusUpdate']} outputs={[`${status}`]}>
             <div style={{ padding: '10px', textAlign: 'center' }}>
                 <div style={{
                     fontWeight: 'bold',

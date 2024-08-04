@@ -46,6 +46,8 @@ export const useStore = create((set, get) => ({
         label = sourceNode.data.text || sourceNode.data.test || '';
       } else if (sourceNode.type === 'input' && sourceNode.data.inputName) {
         label = sourceNode.data.inputName;
+      } else if (sourceNode.type === 'status') {
+        label = sourceNode.data.status || '';
       }
     }
 
@@ -68,13 +70,19 @@ export const useStore = create((set, get) => ({
       if (edge.source === nodeId) {
         const sourceNode = updatedNodes.find(node => node.id === nodeId);
         if (sourceNode) {
-          const label = sourceNode.data.text || sourceNode.data.test || '';
+          let label = '';
+          if (sourceNode.type === 'text' || sourceNode.type === 'test') {
+            label = sourceNode.data.text || sourceNode.data.test || '';
+          } else if (sourceNode.type === 'input') {
+            label = sourceNode.data.inputName || '';
+          } else if (sourceNode.type === 'status') {
+            label = sourceNode.data.status || '';
+          }
           return { ...edge, label };
         }
       }
       return edge;
     });
-
 
     set({ nodes: updatedNodes, edges: updatedEdges });
   },
