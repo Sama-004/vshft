@@ -48,9 +48,6 @@ export const useStore = create((set, get) => ({
         case 'test':
           label = sourceNode.data.test || '';
           break;
-        case 'input':
-          label = sourceNode.data.inputName || '';
-          break;
         case 'status':
           label = sourceNode.data.status || '';
           break;
@@ -62,14 +59,23 @@ export const useStore = create((set, get) => ({
             '/': 'Division result'
           }[sourceNode.data.operation] || '' : '';
           break;
+        case 'llm':
+          label = sourceNode.data.outputLabel || 'LLM response'
+          break;
+        case 'filter':
+          label = sourceNode.data.outputLabel || 'Filtered image';
+          break;
+        case 'translation':
+          label = sourceNode.data.outputLabel || 'Translated text';
+          break
+        case 'inputName':
+          label = sourceNode.data.outputLabel || 'Inputted data';
+          break
         default:
-          label = "error"
+          // label = "error"
           break
       }
     }
-
-    console.log('onConnect - Source Node:', sourceNode);
-    console.log('onConnect - Label:', label);
 
     set({
       edges: addEdge({
@@ -102,9 +108,6 @@ export const useStore = create((set, get) => ({
             case 'test':
               label = sourceNode.data.test || '';
               break;
-            case 'input':
-              label = sourceNode.data.inputName || '';
-              break;
             case 'status':
               label = sourceNode.data.status || '';
               break;
@@ -116,8 +119,20 @@ export const useStore = create((set, get) => ({
                 '/': 'Division result'
               }[sourceNode.data.operation] || '' : '';
               break;
+            case 'llm':
+              label = sourceNode.data.outputLabel || 'LLM response';
+              break;
+            case 'filter':
+              label = sourceNode.data.outputLabel || 'Filtered image';
+              break;
+            case 'translation':
+              label = sourceNode.data.outputLabel || 'Translated text'
+              break
+            case 'inputName':
+              label = sourceNode.data.outputLabel || 'Inputted data';
+              break
             default:
-              label = "error"
+              // label = "error"
               break
           }
           return { ...edge, label };
@@ -126,9 +141,6 @@ export const useStore = create((set, get) => ({
       return edge;
     });
 
-
-    console.log('updateNodeField - Updated Nodes:', updatedNodes);
-    console.log('updateNodeField - Updated Edges:', updatedEdges);
     set({ nodes: updatedNodes, edges: updatedEdges });
   },
 }));
