@@ -19,6 +19,7 @@ export const TestNode = ({ id, data }) => {
                 <label>
                     Test:
                     <input
+                        className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-black border rounded-md px-3 py-2 bg-white transition duration-150 ease-in-out"
                         type="text"
                         value={currText}
                         onChange={handleTextChange}

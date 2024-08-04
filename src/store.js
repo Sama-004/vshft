@@ -143,4 +143,10 @@ export const useStore = create((set, get) => ({
 
     set({ nodes: updatedNodes, edges: updatedEdges });
   },
+  deleteNode: (nodeId) => {
+    const { nodes, edges } = get();
+    const updatedNodes = nodes.filter(node => node.id !== nodeId);
+    const updatedEdges = edges.filter(edge => edge.source !== nodeId && edge.target !== nodeId);
+    set({ nodes: updatedNodes, edges: updatedEdges });
+  },
 }));

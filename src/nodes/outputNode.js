@@ -23,7 +23,7 @@ export const OutputNode = ({ id, data }) => {
           Name:
           <input
             type="text"
-            className="p-2.5 w-full"
+            className="border border-black shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm rounded-md px-3 py-2 bg-white transition duration-150 ease-in-out"
             value={currName}
             onChange={handleNameChange}
           />
