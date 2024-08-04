@@ -11,6 +11,7 @@ import {
 export const useStore = create((set, get) => ({
   nodes: [],
   edges: [],
+  nodeIDs: {},
   getNodeID: (type) => {
     const newIDs = { ...get().nodeIDs };
     if (newIDs[type] === undefined) {
@@ -37,27 +38,50 @@ export const useStore = create((set, get) => ({
   },
   onConnect: (connection) => {
     const sourceNode = get().nodes.find(node => node.id === connection.source);
-    const sourceHandle = connection.sourceHandle;
     let label = '';
 
-
     if (sourceNode && sourceNode.data) {
-      if (sourceNode.type === 'text' || sourceNode.type === 'test') {
-        label = sourceNode.data.text || sourceNode.data.test || '';
-      } else if (sourceNode.type === 'input' && sourceNode.data.inputName) {
-        label = sourceNode.data.inputName;
-      } else if (sourceNode.type === 'status') {
-        label = sourceNode.data.status || '';
+      switch (sourceNode.type) {
+        case 'text':
+          label = sourceNode.data.text || '';
+          break;
+        case 'test':
+          label = sourceNode.data.test || '';
+          break;
+        case 'input':
+          label = sourceNode.data.inputName || '';
+          break;
+        case 'status':
+          label = sourceNode.data.status || '';
+          break;
+        case 'math':
+          label = sourceNode.data.operation ? {
+            '+': 'Addition result',
+            '-': 'Subtraction result',
+            '*': 'Multiplication result',
+            '/': 'Division result'
+          }[sourceNode.data.operation] || '' : '';
+          break;
+        default:
+          label = "error"
+          break
       }
     }
 
+    console.log('onConnect - Source Node:', sourceNode);
+    console.log('onConnect - Label:', label);
+
     set({
       edges: addEdge({
-        ...connection, type: 'smoothstep', animated: true, markerEnd: { type: MarkerType.Arrow, height: '20px', width: '20px' },
+        ...connection,
+        type: 'smoothstep',
+        animated: true,
+        markerEnd: { type: MarkerType.Arrow, height: '20px', width: '20px' },
         label: label
       }, get().edges),
     });
   },
+
   updateNodeField: (nodeId, fieldName, fieldValue) => {
     const updatedNodes = get().nodes.map((node) => {
       if (node.id === nodeId) {
@@ -71,12 +95,30 @@ export const useStore = create((set, get) => ({
         const sourceNode = updatedNodes.find(node => node.id === nodeId);
         if (sourceNode) {
           let label = '';
-          if (sourceNode.type === 'text' || sourceNode.type === 'test') {
-            label = sourceNode.data.text || sourceNode.data.test || '';
-          } else if (sourceNode.type === 'input') {
-            label = sourceNode.data.inputName || '';
-          } else if (sourceNode.type === 'status') {
-            label = sourceNode.data.status || '';
+          switch (sourceNode.type) {
+            case 'text':
+              label = sourceNode.data.text || '';
+              break;
+            case 'test':
+              label = sourceNode.data.test || '';
+              break;
+            case 'input':
+              label = sourceNode.data.inputName || '';
+              break;
+            case 'status':
+              label = sourceNode.data.status || '';
+              break;
+            case 'math':
+              label = sourceNode.data.operation ? {
+                '+': 'Addition result',
+                '-': 'Subtraction result',
+                '*': 'Multiplication result',
+                '/': 'Division result'
+              }[sourceNode.data.operation] || '' : '';
+              break;
+            default:
+              label = "error"
+              break
           }
           return { ...edge, label };
         }
@@ -84,6 +126,9 @@ export const useStore = create((set, get) => ({
       return edge;
     });
 
+
+    console.log('updateNodeField - Updated Nodes:', updatedNodes);
+    console.log('updateNodeField - Updated Edges:', updatedEdges);
     set({ nodes: updatedNodes, edges: updatedEdges });
   },
 }));
